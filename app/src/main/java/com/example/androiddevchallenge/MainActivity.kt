@@ -18,20 +18,17 @@ package com.example.androiddevchallenge
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.material.Card
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.androiddevchallenge.model.PetBean
@@ -49,7 +46,6 @@ class MainActivity : AppCompatActivity() {
 }
 
 // Start building your app here!
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MyApp() {
     Scaffold(
@@ -59,45 +55,63 @@ fun MyApp() {
             )
         },
         content = {
-
-            val data = mutableListOf(
-                PetBean(0, "可爱小狗"),
-                PetBean(0, "可爱小狗"),
-                PetBean(0, "可爱小狗"),
-                PetBean(0, "可爱小狗"),
-                PetBean(0, "可爱小狗"),
-                PetBean(0, "可爱小狗"),
-                PetBean(0, "可爱小狗"),
+            val dataSet = mutableListOf(
+                PetBean(R.mipmap.dog1, "哈士奇", "很凶的样子有没有"),
+                PetBean(R.mipmap.dog2, "可爱小狗", "在草地上快乐地奔跑"),
+                PetBean(R.mipmap.dog3, "柴犬", "柴犬的搞事能力总是不会让人失望。"),
+                PetBean(R.mipmap.dog4, "金毛寻回犬", "善于游泳"),
+                PetBean(
+                    R.mipmap.dog5,
+                    "两只小金毛",
+                    "两只可爱的小金毛"
+                ),
+                PetBean(R.mipmap.dog6, "西施犬", "又长又飘逸的毛发扎个蝴蝶结真可爱"),
+                PetBean(R.mipmap.dog7, "可爱小狗", "很凶的样子有没有"),
             )
-            LazyVerticalGrid(
-                cells = GridCells.Adaptive(minSize = 150.dp),
-                modifier = Modifier.padding(start = 5.dp, top = 5.dp, end = 5.dp, bottom = 5.dp)
+            LazyColumn(
             ) {
-                items(data.size) { index ->
+                items(dataSet.size) { index ->
                     Card(
                         elevation = 3.dp,
-                        modifier = Modifier.padding(
-                            start = 5.dp,
-                            top = 5.dp,
-                            end = 5.dp,
-                            bottom = 10.dp
-                        )
+                        modifier = Modifier
+                            .padding(start = 10.dp, top = 10.dp, end = 10.dp)
+                            .fillMaxWidth()
+                            .clickable {  }
                     ) {
-                        Column {
+                        Row {
                             Image(
-                                painter = painterResource(R.mipmap.dog1),
+                                painter = painterResource(dataSet[index].rid),
                                 contentDescription = "",
-                                 modifier = Modifier.fillMaxWidth()
+                                modifier = Modifier
+                                    .height(100.dp)
+                                    .width(100.dp),
+                                contentScale = ContentScale.Crop,
                             )
-                            Text(
-                                text = data[index].title,
-                                Modifier.padding(
-                                    start = 10.dp,
-                                    top = 5.dp,
-                                    end = 5.dp,
-                                    bottom = 10.dp
+                            Column {
+                                Text(
+                                    text = dataSet[index].title,
+                                    style = MaterialTheme.typography.body2,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    modifier = Modifier.padding(
+                                        start = 10.dp,
+                                        top = 5.dp,
+                                        end = 10.dp,
+                                    )
                                 )
-                            )
+                                Text(
+                                    text = dataSet[index].desc,
+                                    style = MaterialTheme.typography.caption,
+                                    maxLines = 3,
+                                    overflow = TextOverflow.Ellipsis,
+                                    modifier = Modifier.padding(
+                                        start = 10.dp,
+                                        top = 5.dp,
+                                        end = 10.dp,
+                                        bottom = 5.dp
+                                    )
+                                )
+                            }
                         }
                     }
                 }
