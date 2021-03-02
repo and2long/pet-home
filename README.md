@@ -7,7 +7,8 @@
 
 ## :scroll: Description
 <!--- Describe your app in one or two sentences -->
-Pet Home
+PetHome
+希望每个宠物都能拥有一个美好的家。
 
 ## :bulb: Motivation and Context
 <!--- Optionally point readers to interesting parts of your submission. -->

@@ -15,17 +15,26 @@
  */
 package com.example.androiddevchallenge
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -39,93 +48,92 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyTheme {
-                MyApp()
+                Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            title = { Text(text = "宠物之家") }
+                        )
+                    },
+                    content = {
+                        PetList { item ->
+                            startActivity(
+                                Intent(
+                                    this,
+                                    PetDetailActivity::class.java
+                                ).apply {
+                                    putExtra("item", item)
+                                }
+                            )
+                        }
+                    }
+                )
             }
         }
     }
 }
 
-// Start building your app here!
 @Composable
-fun MyApp() {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(text = "宠物之家") }
-            )
-        },
-        content = {
-            val dataSet = mutableListOf(
-                PetBean(R.mipmap.dog1, "哈士奇", "很凶的样子有没有"),
-                PetBean(R.mipmap.dog2, "可爱小狗", "在草地上快乐地奔跑"),
-                PetBean(R.mipmap.dog3, "柴犬", "柴犬的搞事能力总是不会让人失望。"),
-                PetBean(R.mipmap.dog4, "金毛寻回犬", "善于游泳"),
-                PetBean(
-                    R.mipmap.dog5,
-                    "两只小金毛",
-                    "两只可爱的小金毛"
-                ),
-                PetBean(R.mipmap.dog6, "西施犬", "又长又飘逸的毛发扎个蝴蝶结真可爱"),
-                PetBean(R.mipmap.dog7, "可爱小狗", "很凶的样子有没有"),
-            )
-            LazyColumn(
-            ) {
-                items(dataSet.size) { index ->
-                    Card(
-                        elevation = 3.dp,
-                        modifier = Modifier
-                            .padding(start = 10.dp, top = 10.dp, end = 10.dp)
-                            .fillMaxWidth()
-                            .clickable {  }
-                    ) {
-                        Row {
-                            Image(
-                                painter = painterResource(dataSet[index].rid),
-                                contentDescription = "",
-                                modifier = Modifier
-                                    .height(100.dp)
-                                    .width(100.dp),
-                                contentScale = ContentScale.Crop,
-                            )
-                            Column {
-                                Text(
-                                    text = dataSet[index].title,
-                                    style = MaterialTheme.typography.body2,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    modifier = Modifier.padding(
-                                        start = 10.dp,
-                                        top = 5.dp,
-                                        end = 10.dp,
-                                    )
-                                )
-                                Text(
-                                    text = dataSet[index].desc,
-                                    style = MaterialTheme.typography.caption,
-                                    maxLines = 3,
-                                    overflow = TextOverflow.Ellipsis,
-                                    modifier = Modifier.padding(
-                                        start = 10.dp,
-                                        top = 5.dp,
-                                        end = 10.dp,
-                                        bottom = 5.dp
-                                    )
-                                )
-                            }
-                        }
-                    }
-                }
-            }
+fun PetList(onClick: (item: PetBean) -> Unit) {
+    val dataSet = PetBean.defaultValues()
+    LazyColumn {
+        items(dataSet.size) { index ->
+            PetItem(dataSet[index], onClick)
         }
-    )
+    }
 }
 
+@Composable
+fun PetItem(item: PetBean, onClick: (item: PetBean) -> Unit) {
+    Card(
+        elevation = 3.dp,
+        modifier = Modifier
+            .padding(start = 10.dp, top = 10.dp, end = 10.dp)
+            .fillMaxWidth()
+            .clickable { onClick(item) }
+    ) {
+        Row {
+            Image(
+                painter = painterResource(item.rid),
+                contentDescription = item.title,
+                modifier = Modifier
+                    .height(100.dp)
+                    .width(100.dp),
+                contentScale = ContentScale.Crop,
+            )
+            Column {
+                Text(
+                    text = item.title,
+                    style = MaterialTheme.typography.body2,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.padding(
+                        start = 10.dp,
+                        top = 5.dp,
+                        end = 10.dp,
+                    )
+                )
+                Text(
+                    text = item.desc,
+                    style = MaterialTheme.typography.caption,
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.padding(
+                        start = 10.dp,
+                        top = 5.dp,
+                        end = 10.dp,
+                        bottom = 5.dp
+                    )
+                )
+            }
+        }
+    }
+}
 
 @Preview("Light Theme", widthDp = 360, heightDp = 640)
 @Composable
 fun LightPreview() {
     MyTheme {
-        MyApp()
+        PetList {}
     }
 }
 
@@ -133,6 +141,6 @@ fun LightPreview() {
 @Composable
 fun DarkPreview() {
     MyTheme(darkTheme = true) {
-        MyApp()
+        PetList {}
     }
 }
