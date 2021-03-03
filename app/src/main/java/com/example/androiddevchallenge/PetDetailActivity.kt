@@ -20,6 +20,7 @@ import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -51,7 +52,7 @@ class PetDetailActivity : AppCompatActivity() {
                 Scaffold(
                     topBar = {
                         TopAppBar(
-                            title = { Text(text = item.title) },
+                            title = { Text(text = item.name) },
                             navigationIcon = {
                                 IconButton(onClick = { finish() }) {
                                     Icon(
@@ -87,11 +88,14 @@ fun PetDetail(item: PetBean) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Image(
             painter = painterResource(id = item.rid),
-            contentDescription = item.title,
+            contentDescription = item.name,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(300.dp)
+                .height(300.dp),
         )
+        Box(modifier = Modifier.padding(top = 20.dp)) {
+            PetTags(item = item)
+        }
         Text(
             text = item.desc,
             style = MaterialTheme.typography.body2,
